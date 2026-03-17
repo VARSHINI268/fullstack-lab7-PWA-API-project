@@ -1,37 +1,46 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import appLogo from '/favicon.svg'
-import PWABadge from './PWABadge.jsx'
-import './App.css'
+import { useState } from "react";
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [goldPrice, setGoldPrice] = useState("");
+
+  const getGoldPrice = async () => {
+
+    const response = await fetch(
+      "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=XAUUSD&apikey=K6W78SV0SKP5Y1AL"
+    );
+
+    const data = await response.json();
+
+    setGoldPrice(data["Global Quote"]["05. price"]);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={appLogo} className="logo" alt="cd pwaapp logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>cd pwaapp</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-      <PWABadge />
-    </>
-  )
+    <div style={{textAlign:"center", marginTop:"100px"}}>
+
+      <h1>Gold Price Checker 🪙</h1>
+
+      <button
+        onClick={getGoldPrice}
+        style={{
+          padding:"10px 20px",
+          fontSize:"18px",
+          background:"gold",
+          border:"none",
+          borderRadius:"8px"
+        }}
+      >
+        Get Gold Price
+      </button>
+
+      {goldPrice && (
+        <h2 style={{marginTop:"20px"}}>
+          Current Gold Price: ${goldPrice}
+        </h2>
+      )}
+
+    </div>
+  );
 }
 
-export default App
+export default App;
